@@ -1,0 +1,25 @@
+# LoadFile "C:/Python311/python311.dll"                                                                                                                                                                                                        
+# LoadModule wsgi_module "C:/Python311/Lib/site-packages/mod_wsgi/server/mod_wsgi.cp311-win_amd64.pyd"  
+# WSGIPythonHome "C:/Python311" 
+
+
+ServerName store.localhost
+# <VirtualHost *:80>
+#     DocumentRoot "C:\Apache24\htdocs\storeBackEnd"
+#     Alias /static "C:\Apache24\htdocs\storeBackEnd\digitalAssets"
+    
+#     <Directory "C:\Apache24\htdocs\storeBackEnd">
+#         Require all granted
+#     </Directory>
+    
+
+
+#     # WSGIProcessGroup storeBackEnd python-home="C:/dev/store/StoreWebSite/storeBackEnd/venv" python-path="C:/dev/store/StoreWebSite/storeBackEnd"
+#     WSGIScriptAlias / "C:/Apache24/htdocs/storeBackEnd/storeBackEnd/wsgi.py"
+    
+#     <Directory "C:\Apache24\htdocs\storeBackEnd">
+#         <Files wsgi.py>
+#             Require all granted
+#         </Files>
+#     </Directory>
+# </VirtualHost>
