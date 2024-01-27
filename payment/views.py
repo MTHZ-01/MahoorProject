@@ -14,6 +14,7 @@ description = "پول وده, پول زور ورده"  # Required
 email = "user@userurl.ir"  # Optional
 mobile = "09123456789"  # Optional
 CallbackURL = "http://127.0.0.1:8000/verify/"
+# CallbackURL = "https://pardehmahoor.ir/verify/"
 
 
 @csrf_exempt
@@ -22,13 +23,12 @@ def pay(request):
     data = json.loads(request.body)
     # MERCHANT_ID = data["MMERCHANT_ID"]
     amount = data["amount"]
-    descriptionList = [data["description"][i]["title"]+ " " for i in range(len(data["description"]))]
-    description = "" 
+    descriptionList = data["description"]
+    description = data["description"]
     # email = data["email"]
     # mobile = data["mobile"]
     # CallbackURL = data["CallbackURL"]
-    for i in descriptionList: description+= i + " "
-    print(description)
+
 
     client = Client(ZARINPAL_WEBSERVICE)
     result = client.service.PaymentRequest(
@@ -59,14 +59,20 @@ def verify(request):
         print(f"{result.Status }&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
 
         if result.Status == 100 or result.Status == 200 :
-            # return HttpResponse(" تراکنش موفق شماره بیگیری:" + str(result.RefID))
             return redirect(f"http://127.0.0.1:8000/callBack/200/{str(result.RefID)}")
+            # return redirect(f"https://pardehmahoor.ir/callBack/200/{str(result.RefID)}")
+        
         elif result.Status == 101:
             return redirect(f"http://127.0.0.1:8000/callBack/101/nothing")
-            # return HttpResponse("تراکنش ثبت شده است : " + str(result.Status))
+            # return redirect(f"https://pardehmahoor.ir/callBack/101/nothing")
+
+        
         else:
             return redirect(f"http://127.0.0.1:8000/callBack/199/nothing")
+            # return redirect(f"https://pardehmahoor.ir/callBack/199/nothing")
             # return HttpResponse("Transaction failed. Status: " + str(result.Status))
+        
     else:
         return redirect(f"http://127.0.0.1:8000/callBack/199/nothing")
+        # return redirect(f"https://pardehmahoor.ir/callBack/199/nothing")
 

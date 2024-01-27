@@ -11,6 +11,7 @@ urlpatterns = [
     
     path("", include("reactui.urls")),
     path("shoppingCart", include("reactui.urls")),
+    path("shoppingCart/", include("reactui.urls")),
     path("paymentSuccess", include("reactui.urls")),
     path("account", include("reactui.urls")),
     path("SignUp", include("reactui.urls")),

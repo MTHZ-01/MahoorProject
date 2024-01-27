@@ -205,74 +205,82 @@ def getDivisionRelevency(request):
 
 @csrf_exempt
 def getCity(request):
-    states = requests.get("https://app.krch.ir/v1/get_state").json()["objects"]["state"]
-    cities = requests.get("https://app.krch.ir/v1/get_city").json()["objects"]["city"]
+    try:
+        states = requests.get("https://app.krch.ir/v1/get_state").json()["objects"]["state"]
+        cities = requests.get("https://app.krch.ir/v1/get_city").json()["objects"]["city"]
 
-    cityStates = []
+        cityStates = []
 
-    for city in cities:
-        for state in states:
-            if city["state_no"] == state["no"]:
-                cityStates.append(
-                    {
-                        "label": f"استان {state['name']} شهر {city['name']}",
-                        "id": city["no"],
-                    }
-                )
-                break
+        for city in cities:
+            for state in states:
+                if city["state_no"] == state["no"]:
+                    cityStates.append(
+                        {
+                            "label": f"استان {state['name']} شهر {city['name']}",
+                            "id": city["no"],
+                        }
+                    )
+                    break
 
-    return JsonResponse({"states": cityStates})
+        return JsonResponse({"states": cityStates})
+    except:
+        return JsonResponse({"error": 199})
 
 
 # @login_required(login_url=("Login"))
 @csrf_exempt
 def submitBuy(request):
-    data = json.loads(request.body)
+    try:
+        data = json.loads(request.body)
 
-    # print(data)
+        # print(data)
+        
+        userId = data["userId"]
+        cityId = data["cityId"]
+        postalCode = data["postalCode"]
+        address = data["address"]
+        prodsInOrder = data["prodsInOrder"]
+        # totalFee = data["totalFee"]
 
-    userId = data["userId"]
-    cityId = data["cityId"]
-    postalCode = data["postalCode"]
-    address = data["address"]
-    prodsInOrder = data["prodsInOrder"]
-    totalFee = data["totalFee"]
+        # print(type(prodsInOrder))
 
-    # print(type(prodsInOrder))
+        u = User.objects.get(id=userId)
 
-    u = User.objects.get(id=userId)
+        p = list(filter(lambda x: x.user.id == userId, list(profile.objects.all())))[0]
 
-    p = list(filter(lambda x: x.user.id == userId, list(profile.objects.all())))[0]
-
-    o = Ord.objects.create(
-        user=u,
-        cityId=cityId,
-        postalCode=postalCode,
-        cityAndStateName=address,
-        status="p",
-    )
-
-    go = giveOrd.objects.create(order=o, profile=p)
-    # creating producs in the order list:
-    for prod in prodsInOrder:
-        djangoId = prod["djangoId"]
-        rawProduct = product.objects.get(id=djangoId)
-        newProdOrder = productsInOrder.objects.create(
-            prod=rawProduct,
-            order=o,
-            explainations=prod["description"],
-            width=prod["width"],
-            height=prod["height"],
-            chainPosition=prod["chainPosition"],
-            installationPosition=prod["installationPosition"],
+        o = Ord.objects.create(
+            user=u,
+            cityId=f"آدرس: {address}",
+            postalCode=postalCode,
+            cityAndStateName= f"استان و شهر: {cityId['label']}"  ,
+            status="p",
         )
-        prodToAdd = product.objects.get(id=prod["djangoId"])
-        pTop = prodToProfwhore.objects.create(prof=p, prod=prodToAdd)
-        pTop.save()
 
-    print(p)
+        go = giveOrd.objects.create(order=o, profile=p)
+        # creating producs in the order list:
+        for prod in prodsInOrder:
+            djangoId = prod["djangoId"]
+            rawProduct = product.objects.get(id=djangoId)
+            newProdOrder = productsInOrder.objects.create(
+                prod=rawProduct,
+                order=o,
+                explainations=prod["description"],
+                width=prod["width"],
+                height=prod["height"],
+                chainPosition=prod["chainPosition"],
+                installationPosition=prod["installationPosition"],
+            )
+            prodToAdd = product.objects.get(id=prod["djangoId"])
+            pTop = prodToProfwhore.objects.create(prof=p, prod=prodToAdd)
+            pTop.save()
 
-    return JsonResponse({"status": 200})
+        print(p)
+
+        return JsonResponse({"status": 200})
+    except Exception as e :
+        print(f"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! {e}")
+        return JsonResponse({"status": 199})
+
 
 @csrf_exempt
 def Login(request):

@@ -162,13 +162,13 @@ class productsInOrder(models.Model):
         verbose_name = "محصولات"
         verbose_name_plural = "اجزاء سبد خرید"
 
-    prod = models.ForeignKey(product, on_delete=models.DO_NOTHING, null=True)
-    order = models.ForeignKey("Ord", on_delete=models.CASCADE, null=True)
-    width = models.IntegerField()
-    height = models.IntegerField()
-    explainations = models.CharField(max_length=1000, null=True)
-    chainPosition = models.CharField(max_length=1000, null=True)
-    installationPosition = models.CharField(max_length=1000, null=True)
+    prod = models.ForeignKey(product, on_delete=models.DO_NOTHING, null=True, verbose_name="نام محصول")
+    order = models.ForeignKey("Ord", on_delete=models.CASCADE, null=True )
+    width = models.IntegerField( verbose_name="طول")
+    height = models.IntegerField( verbose_name="ارتفاع")
+    explainations = models.CharField(max_length=1000, null=True, verbose_name="توضیحات مشتری درباره این مورد")
+    chainPosition = models.CharField(max_length=1000, null=True, verbose_name="محل زنجیر")
+    installationPosition = models.CharField(max_length=1000, null=True, verbose_name="محل نصب" )
 
     def giveDataOut(self):
         return {
