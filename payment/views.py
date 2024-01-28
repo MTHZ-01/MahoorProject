@@ -70,7 +70,7 @@ def verify(request):
         else:
             return redirect(f"http://127.0.0.1:8000/callBack/199/nothing")
             # return redirect(f"https://pardehmahoor.ir/callBack/199/nothing")
-            # return HttpResponse("Transaction failed. Status: " + str(result.Status))
+
         
     else:
         return redirect(f"http://127.0.0.1:8000/callBack/199/nothing")
